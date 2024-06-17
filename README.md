@@ -45,13 +45,12 @@ The OWLv2 Object Detection Web Application allows users to upload images or prov
 
 6. Click the "Start" button to process the image and view the results.
 
-## Screenshots
+## Local Results
+![Car Local](assets/car_local.jpg)
 
-*Include screenshots here to demonstrate how to use the application.*
+## Link Results
 
-## Example Results
-
-*Include example results screenshots here.*
+![Dancing Link](assets/dancing_link.jpg)
 
 ## Future Enhancements
 
