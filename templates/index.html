@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags for character set and viewport configuration -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title of the web page -->
+    <title>OWLv2 Model</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Body styling for background color and centering content */
+        body {
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        /* Container styling for background, padding, and shadow */
+        .container {
+            background: #fff;
+            padding: 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        /* Flexbox styling for form and image wrapper */
+        .form-image-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        /* Form container styling */
+        .form-container {
+            flex: 1;
+            margin-right: 20px;
+        }
+        /* Image container styling */
+        .image-container {
+            flex: 1;
+            max-width: 50%;
+            text-align: center;
+        }
+        /* Custom file input styling */
+        .custom-file-input:lang(en)~.custom-file-label::after {
+            content: "Browse";
+        }
+        /* Primary button styling */
+        .btn-primary {
+            background-color: #007BFF;
+            border-color: #007BFF;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        /* Placeholder for image display */
+        .placeholder {
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background-color: #e9ecef;
+            border-radius: 10px;
+            position: relative;
+        }
+        .placeholder img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        /* Nav tabs styling */
+        .nav-tabs .nav-link {
+            border: 1px solid transparent;
+            border-top-left-radius: .25rem;
+            border-top-right-radius: .25rem;
+        }
+        .nav-tabs .nav-link.active {
+            color: #495057;
+            background-color: #fff;
+            border-color: #dee2e6 #dee2e6 #fff;
+        }
+        /* Results table styling */
+        .results-table {
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main container for the content -->
+    <div class="container">
+        <div class="form-image-wrapper">
+            <!-- Form container for file upload and link input -->
+            <div class="form-container">
+                <h1 class="text-primary mb-4">Try OWLv2</h1>
+                <!-- Nav tabs for switching between file upload and link input -->
+                <ul class="nav nav-tabs" id="uploadTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="file-tab" data-toggle="tab" href="#file" role="tab" aria-controls="file" aria-selected="true">Upload File</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link-tab" data-toggle="tab" href="#link" role="tab" aria-controls="link" aria-selected="false">Paste Link</a>
+                    </li>
+                </ul>
+                <!-- Tab content for file upload and link input forms -->
+                <div class="tab-content" id="uploadTabContent">
+                    <!-- File upload form -->
+                    <div class="tab-pane fade show active" id="file" role="tabpanel" aria-labelledby="file-tab">
+                        <form method="post" enctype="multipart/form-data" class="mt-3">
+                            <div class="custom-file mb-3">
+                                <input type="file" class="custom-file-input" name="file" id="fileInput">
+                                <label class="custom-file-label" for="fileInput">Browse</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="keywords">Keywords (Separated by Comma):</label>
+                                <input type="text" class="form-control" id="keywords" name="keywords" placeholder="fire, person etc.">
+                            </div>
+                            <div class="form-group">
+                                <label for="confidence_threshold">Confidence Threshold:</label>
+                                <input type="number" class="form-control" id="confidence_threshold" name="confidence_threshold" step="0.01" min="0" max="1" value="0.05">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Start</button>
+                        </form>
+                    </div>
+                    <!-- Link input form -->
+                    <div class="tab-pane fade" id="link" role="tabpanel" aria-labelledby="link-tab">
+                        <form method="post" class="mt-3">
+                            <div class="form-group">
+                                <label for="imageUrl">Image Link:</label>
+                                <input type="url" class="form-control" id="imageUrl" name="imageUrl" placeholder="https://example.com/image.jpg">
+                            </div>
+                            <div class="form-group">
+                                <label for="keywords">Keywords (Separated by Comma):</label>
+                                <input type="text" class="form-control" id="keywords" name="keywords" placeholder="fire, person etc.">
+                            </div>
+                            <div class="form-group">
+                                <label for="confidence_threshold">Confidence Threshold:</label>
+                                <input type="number" class="form-control" id="confidence_threshold" name="confidence_threshold" step="0.01" min="0" max="1" value="0.05">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Start</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Image container for displaying the result -->
+            <div class="image-container">
+                <h2 class="text-primary">Output</h2>
+                <div class="placeholder">
+                    {% if image_url %}
+                        <img src="{{ image_url }}" alt="Sonuç Resmi" class="img-fluid">
+                    {% else %}
+                        <p>No Upload</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- Results table for displaying detected objects -->
+        {% if detections %}
+            <div class="results-table">
+                <h2 class="text-primary">Detected Objects</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Object</th>
+                            <th>Confidence</th>
+                            <th>Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for detection in detections %}
+                            <tr>
+                                <td>{{ detection.label }}</td>
+                                <td>{{ detection.confidence }}</td>
+                                <td>{{ detection.box }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+    <!-- JavaScript for Bootstrap and handling file input label change -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $('#fileInput').on('change', function() {
+            // Get the file name
+            var fileName = $(this).val().split('\\').pop();
+            // Replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        });
+    </script>
+</body>
+</html>
